@@ -1,7 +1,7 @@
 require 'logger'
 require 'pry'
 
-module SpiderLabs
+module ROMHacking
   # Simple skeleton class
   DataFile = Struct.new(:filename, :data)
   
@@ -59,6 +59,6 @@ module SpiderLabs
 end
 
 if $0 == __FILE__
-  $diff = SpiderLabs::Diff.new(*ARGV)
+  $diff = ROMHacking::Diff.new(*ARGV)
   binding.pry(:quiet => true)
 end
