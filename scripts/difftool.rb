@@ -29,7 +29,6 @@ module ROMHacking
         
         # We filter all offsets that do not match the comparison criteria
         next_range = byte_range.find_all do |offset|
-          $stderr.puts("#{data_b[offset]} #{data_op} #{data_a[offset]}")
           data_b[offset].send(data_op.to_sym, data_a[offset])
         end
         byte_range = next_range
