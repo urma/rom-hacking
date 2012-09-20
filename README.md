@@ -7,7 +7,7 @@ Currently there is a single script, `difftool.rb`. This scripts allows for compa
 
 ![RAM Filter](http://www.the-interweb.com/bdump/fceuxdsp/filter2.png)
 
-The `difftool.rb` implementation does not support different criteria between each state snapshot, so you cannot do searches for values that increased between two snapshots, and decresed between the following ones. It does drop you into a nice [Pry](http://pryrepl.org/) prompt where you peek and poke freely around the memory contents.
+The script offers an object which stores file information and contents for multiple memory dumps, and allows you to compare the values in those dumps using arbitrary comparison criteria. It drops you into a nice [Pry](http://pryrepl.org/) prompt where you peek and poke freely around the memory contents.
 
 ### Setup
 Dependencies for all the scripts are handled by a `Gemfile`. You can install all the dependencies automatically using [Bundler](http://gembundler.com/).
@@ -44,6 +44,22 @@ After loading all the provided files, the script will drop the user into a Pry p
 In this sample session, we load 3 different files (this is displayed in nice colors when running on an actual terminal). These files correspond to memory dumps from a game where the user had 1, 2 and 3 remaining lives, respectively. We assume the data area where the remaining number of lives resides will increase between those snapshots, although we do not know how exactly the values are being encoded. So we do a simple search for memory positions which increased value (represented by the `$diff.compare('>')` call), and the tool returns a list of memory positions which contain values that increased between the 3 dumps.
 
 Next, we display the values stored offset returned in each dump using `$diff.display(37)`. We can see that the offset 37 (or 0x25, as displayed by the tool) contains the values 0x01, 0x02 and 0x03, which have indeed increased between the dumps. They also correspond nicely to the number of lives our character has on the game.
+
+It is also possible to specify different criteria between the memory dumps. For example, if you wanted to discover memory positions which changed between the first two dumps, but remained unchanged between the second and the third one, you could use the following query:
+
+    [rom-hacking/scripts]$ ruby difftool.rb 1_live.dump 2_lives.dump 3_lives.dump
+    Loading $diff.files[0] => 1_live.dump
+    Loading $diff.files[1] => 2_lives.dump
+    Loading $diff.files[2] => 3_lives.dump
+    [1] pry(main)> $diff.compare('!=', '==')
+    => [93, 94, 144]
+    [2] pry(main)> $diff.display(93, 94, 144)
+    0: filename: 1_live.dump, [ 0x005d: 0x04, 0x005e: 0x04, 0x0090: 0x03 ]
+    1: filename: 2_lives.dump, [ 0x005d: 0x02, 0x005e: 0x02, 0x0090: 0x01 ]
+    2: filename: 3_lives.dump, [ 0x005d: 0x02, 0x005e: 0x02, 0x0090: 0x01 ]
+    => nil
+
+As seen above, the `$diff.display` method supports multiple offsets, which allows you to see how a set of values changed between the dumps at a glance.
 
 ## Work in Progress
 As can be easily seen, this project is very much a work in progress. Additional tools will certainly be developed, and will be added here as they reach "ready for general user consumption" status.
