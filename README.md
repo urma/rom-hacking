@@ -1,4 +1,5 @@
-rom-hacking
+ROM Hacking
 ===========
 
-ROM hacking support tools, scripts and documentation
+This repository holds various scripts, support tools and documentation associated with
+the 'ROM Hacking for Fun, Profit & Infinite Lives' presentation.
