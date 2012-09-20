@@ -69,6 +69,7 @@ This script displays information extracted from Nintendo Entertainment System RO
 
 #### Usage
 There are no arguments aside from the NES filename.
+
     ruby nesinfo.rb file.nes
 
 The output consists of various metadata elements extracted from the NES file headers:
