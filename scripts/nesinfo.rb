@@ -50,7 +50,7 @@ module ROMHacking
     end
     
     def rom_banks
-      @header[NES_ROM_OFFSET]
+      @header[NES_ROM_OFFSET] == 0 ? 1 : @header[NES_ROM_OFFSET]
     end
     
     def vrom_banks
@@ -108,8 +108,9 @@ if $0 == __FILE__
   
   $stdout.puts("-----------------")
   $stdout.puts("        Filename: #{ARGV[0]}")
-  $stdout.puts("# 16kB ROM Banks: #{parser.rom_banks}")
-  $stdout.puts("# 8kB VROM Banks: #{parser.vrom_banks}")
+  $stdout.puts("# 16kB ROM Banks: #{parser.rom_banks} (#{16 * parser.rom_banks}kB)")
+  $stdout.puts("# 8kB VROM Banks: #{parser.vrom_banks} (#{8 * parser.vrom_banks}kB)")
+  $stdout.puts("#  8kB RAM Banks: #{parser.ram_banks} (#{8 * parser.ram_banks}kB)")
   $stdout.puts("       Mirroring: #{parser.is_vertical_mirror? ? 'Vertical' : 'Horizontal'}")
   $stdout.puts("  Battery Backup: #{boolean_to_string(parser.has_battery?)}")
   $stdout.puts("         Trainer: #{boolean_to_string(parser.has_trainer?)}")
